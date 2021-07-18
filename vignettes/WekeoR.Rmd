@@ -1,0 +1,50 @@
+---
+title: "WekeoR"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{WekeoR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+WEkEO is one of several portals which provide access to ESA Copernicus and Sentinal satellite data. The wekeoR package simplifies provides a wrapper for the WEkEO Harmonised Data Access (HDA) API. 
+
+More information on WEkEO can be found here. Documentation and more information on the API itself can be found here. 
+
+example usage
+```{r eval = F}
+library(wekeoR)
+
+hda_list = wekeoR::init(api_key, output_directory)
+
+query = 
+  
+
+hda_list = 
+  
+hda_list = download_data(hda_list, 'zip')
+
+```
+
+
+
+
+
+## Pre-requisites
+Before being able to search or download data from the WEkEO API you need to have registered an account. 
+
+
+## Basic usage flow
+1. Search for datasets on WEkEO
+2. Get the data sets ID
+3. Get 
+
+
+## Specifying dataset queries
