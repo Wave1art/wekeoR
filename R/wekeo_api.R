@@ -1,11 +1,13 @@
-library(RCurl)
-library(httr)
-library(jsonlite)
+# library(RCurl)
+# library(httr)
+# library(jsonlite)
 
 
-#' generate_api_key
+#' Generate WEkEO API Key
 #'
 #' Generates a base64-encoded api key based on the WEkEO user credentials username:password.
+#'
+#' Note that decoding the hash will recover the original username and password. For that reason it is strongly advised that you never include the API key in materials which are publically shared.
 #'
 #' @param username : WEkEO username
 #' @param password : WEkEO password
@@ -30,7 +32,7 @@ generate_api_key = function(username, password){
 #' @export
 #'
 #' @examples
-init = function(dataset_id, api_key, download_dir_path){
+init = function(api_key, download_dir_path){
   hda_list = list()
 
   #Data broker address
@@ -46,9 +48,6 @@ init = function(dataset_id, api_key, download_dir_path){
   # data request address
   hda_list['dataRequest_address'] = paste(hda_list['broker_endpoint'],
                                           '/datarequest', sep = '')
-
-  #dataset id
-  hda_list['dataset_id'] = dataset_id
 
   #API key
   hda_list['api_key'] = api_key
@@ -164,6 +163,9 @@ submit_wekeo_query = function(hda_list, query){
 
   #calls the polling function which checks the job on a periodic basis to see if it has finished. This effectively makes this a synchronous approach and therefore blocking. could be changed in future to not be blocking...
   get_query_status(hda_list)
+
+  # Attach the query to the hda_list object
+  hda_list[['query']] = query
 
   return(hda_list)
 }
