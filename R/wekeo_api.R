@@ -1,11 +1,13 @@
-library(RCurl)
-library(httr)
-library(jsonlite)
+# library(RCurl)
+# library(httr)
+# library(jsonlite)
 
 
-#' generate_api_key
+#' Generate WEkEO API Key
 #'
 #' Generates a base64-encoded api key based on the WEkEO user credentials username:password.
+#'
+#' Note that decoding the hash will recover the original username and password. For that reason it is strongly advised that you never include the API key in materials which are publically shared.
 #'
 #' @param username : WEkEO username
 #' @param password : WEkEO password
@@ -16,7 +18,7 @@ library(jsonlite)
 #' @examples
 generate_api_key = function(username, password){
   s = paste(username, password, sep = ':', collapse = ':')
-  api_key = base64Encode(s, mode = 'character')
+  api_key = RCurl::base64Encode(s, mode = 'character')
   return(api_key)
 }
 
@@ -30,7 +32,7 @@ generate_api_key = function(username, password){
 #' @export
 #'
 #' @examples
-init = function(dataset_id, api_key, download_dir_path){
+init = function(api_key, download_dir_path){
   hda_list = list()
 
   #Data broker address
@@ -46,9 +48,6 @@ init = function(dataset_id, api_key, download_dir_path){
   # data request address
   hda_list['dataRequest_address'] = paste(hda_list['broker_endpoint'],
                                           '/datarequest', sep = '')
-
-  #dataset id
-  hda_list['dataset_id'] = dataset_id
 
   #API key
   hda_list['api_key'] = api_key
@@ -78,7 +77,7 @@ get_access_token = function(hda_list){
   headers = list(Authorization = paste('Basic ', hda_list['api_key'], sep = ''))
 
   message('Getting access token. This token is valid for one hour only.')
-  resp = GET(hda_list$accessToken_address,
+  resp = httr::GET(hda_list$accessToken_address,
              add_headers(.headers = unlist(headers)))
 
   # If the response code is 200 retrieve the token from the response
@@ -112,7 +111,7 @@ acceptTandC = function(hda_list){
   msg1 = 'Accepting Terms and Conditions of Copernicus_General_licence'
   msg2 = 'Terms and Conditions already accepted'
 
-  resp = GET(hda_list$acceptTandC_address,
+  resp = httr::GET(hda_list$acceptTandC_address,
              add_headers(.headers = unlist(hda_list$headers)))
 
   isTandCAccepted = content(resp)$accepted
@@ -147,7 +146,7 @@ acceptTandC = function(hda_list){
 #' @examples
 submit_wekeo_query = function(hda_list, query){
 
-  resp = POST(hda_list$dataRequest_address,
+  resp = httr::POST(hda_list$dataRequest_address,
              add_headers(.headers = unlist(hda_list$headers)),
              body = query, # Will auto-unbox. This part is somewhat fragile...
              encode = 'json'
@@ -164,6 +163,9 @@ submit_wekeo_query = function(hda_list, query){
 
   #calls the polling function which checks the job on a periodic basis to see if it has finished. This effectively makes this a synchronous approach and therefore blocking. could be changed in future to not be blocking...
   get_query_status(hda_list)
+
+  # Attach the query to the hda_list object
+  hda_list[['query']] = query
 
   return(hda_list)
 }
@@ -198,7 +200,7 @@ get_query_status = function(hda_list, t_step = 5, t_max = 60){
     # Avoid overloading server for long running queries.
     polling_time_control(t_step * count, t_max)
 
-    resp = GET(paste(hda_list$dataRequest_address, '/status/', hda_list$job_id, sep = ''),
+    resp = httr::GET(paste(hda_list$dataRequest_address, '/status/', hda_list$job_id, sep = ''),
                add_headers(.headers = unlist(hda_list$headers)))
 
     if(resp$status_code == hda_list$CONST_HTTP_SUCCESS_CODE){
@@ -233,7 +235,7 @@ get_query_results_list = function(hda_list){
 
   while( pages > page){
 
-    resp = GET( paste(hda_list$dataRequest_address, '/jobs/', hda_list$job_id, '/result', sep = ''),
+    resp = httr::GET( paste(hda_list$dataRequest_address, '/jobs/', hda_list$job_id, '/result', sep = ''),
                 add_headers(.headers = unlist(hda_list$headers)),
                 query = list(page = page))
 
@@ -278,7 +280,7 @@ get_order_ids = function(hda_list){
                 uri = results[[i]][['url']])
 
 
-    resp = POST(paste(hda_list$broker_endpoint, '/dataorder', sep = ''),
+    resp = httr::POST(paste(hda_list$broker_endpoint, '/dataorder', sep = ''),
                 add_headers(.headers = unlist(hda_list$headers)),
                 body = data, # Will auto-unbox. This part is somewhat fragile...
                 encode = 'json'
@@ -329,7 +331,7 @@ i = 1
       # Check if order has completed. if so download it
       order_status = F
 
-      resp = GET(paste(hda_list$broker_endpoint, '/dataorder/status/', hda_list$results[[i]]$order, sep = ''),
+      resp = httr::GET(paste(hda_list$broker_endpoint, '/dataorder/status/', hda_list$results[[i]]$order, sep = ''),
                   add_headers(.headers = unlist(hda_list$headers)))
 
       if(resp$status_code == hda_list$CONST_HTTP_SUCCESS_CODE){
@@ -346,7 +348,7 @@ i = 1
 
         message('Downloading file: ', out_file_name)
 
-        resp = GET(paste(hda_list$broker_endpoint, '/dataorder/download/', hda_list$results[[i]]$order, sep = ''),
+        resp = httr::GET(paste(hda_list$broker_endpoint, '/dataorder/download/', hda_list$results[[i]]$order, sep = ''),
                    write_disk( file.path(outDirectory, out_file_name), overwrite = T),
                    progress(),
                    add_headers(.headers = unlist(hda_list$headers)))
