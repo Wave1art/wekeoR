@@ -67,11 +67,10 @@ WEkEO provides a [simple online interface]("https://www.wekeo.eu/data?view=viewe
 
 This interface also gives access to the metadata needed to construct a valid query. It can be used to generate a template query which can then be adapted to suit your specific needs.
 
-![WEkEO browser interface - API Query template example](https://github.com/Wave1art/wekeoR/blob/34a8077b4dbdcf7530fa5292bf593536a7454bae/img/WEkEO%20API%20flow.png)
-Sometimes the query JSON in the WEkEO brower appears to be malformed so it is generally a good idea to test a query through the web interface to check that it is accepted. Already knowing whether there is a problem with the JSON generally accelerates debugging. 
-
+![WEkEO browser interface - API Query template example](https://github.com/Wave1art/wekeoR/blob/f04be1f7a4fbce51377fe0b4a951b86d881505ab/img/WEkEO%20API%20query.png)
 ## API flow diagram
-![API flow and WEkEOR function calls](img/WEkEO API flow.png){width=100%}
+![API flow and WEkEOR function calls](https://github.com/Wave1art/wekeoR/blob/34a8077b4dbdcf7530fa5292bf593536a7454bae/img/WEkEO%20API%20flow.png)
+
 Sometimes the query JSON in the WEkEO brower appears to be malformed so it is generally a good idea to test a query through the web interface to check that it is accepted. Already knowing whether there is a problem with the JSON generally accelerates debugging. 
 
 ## Dataset queries & troubleshooting
