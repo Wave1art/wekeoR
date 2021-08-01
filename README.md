@@ -72,7 +72,7 @@ Sometimes the query JSON in the WEkEO brower appears to be malformed so it is ge
 
 ## API flow diagram
 ![API flow and WEkEOR function calls](img/WEkEO API flow.png){width=100%}
-
+Sometimes the query JSON in the WEkEO brower appears to be malformed so it is generally a good idea to test a query through the web interface to check that it is accepted. Already knowing whether there is a problem with the JSON generally accelerates debugging. 
 
 ## Dataset queries & troubleshooting
 The exact format required of the WEkEO query is given by the dataset metadata. In practice it can be a hassle to create a correctly formatted query object. Often it is faster to use a JSON object created by the WEkEO web interface for the dataset of interest as a starting point. 
