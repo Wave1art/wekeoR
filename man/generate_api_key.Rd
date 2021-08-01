@@ -2,7 +2,7 @@
 % Please edit documentation in R/wekeo_api.R
 \name{generate_api_key}
 \alias{generate_api_key}
-\title{generate_api_key}
+\title{Generate WEkEO API Key}
 \usage{
 generate_api_key(username, password)
 }
@@ -16,4 +16,7 @@ a string of the base64-encoded API key
 }
 \description{
 Generates a base64-encoded api key based on the WEkEO user credentials username:password.
+}
+\details{
+Note that decoding the hash will recover the original username and password. For that reason it is strongly advised that you never include the API key in materials which are publically shared.
 }

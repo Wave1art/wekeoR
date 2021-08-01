@@ -4,7 +4,7 @@
 \alias{init}
 \title{Title}
 \usage{
-init(dataset_id, api_key, download_dir_path)
+init(api_key, download_dir_path)
 }
 \arguments{
 \item{download_dir_path}{}
