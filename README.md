@@ -1,18 +1,4 @@
----
-title: "WekeoR"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{WekeoR}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
----
-
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
+# WEkEOR
 
 The wekeoR package simplifies provides a wrapper for the WEkEO Harmonised Data Access (HDA) API. 
 
@@ -22,14 +8,14 @@ More information on [WEkEO can be found here]("https://www.wekeo.eu"). Documenta
 
 ## Installation
 You can install the development version of the package using dev tools.
-```{r eval = F}
+```r
 # install.packages("devtools")
 devtools::install_github("wave1art/wekeoR")
 ```
 
 
 ## Basic Example
-```{r eval = F}
+```r
 library(wekeoR)
 
 hda_list = wekeoR::init(api_key, output_directory)
@@ -81,11 +67,11 @@ WEkEO provides a [simple online interface]("https://www.wekeo.eu/data?view=viewe
 
 This interface also gives access to the metadata needed to construct a valid query. It can be used to generate a template query which can then be adapted to suit your specific needs.
 
-![WEkEO browser interface - API Query template example](WEkEO API query.png){width=100%}
+![WEkEO browser interface - API Query template example](/img/WEkEO API query.png){width=100%}
 Sometimes the query JSON in the WEkEO brower appears to be malformed so it is generally a good idea to test a query through the web interface to check that it is accepted. Already knowing whether there is a problem with the JSON generally accelerates debugging. 
 
 ## API flow diagram
-![API flow and WEkEOR function calls](WEkEO API flow.png){width=100%}
+![API flow and WEkEOR function calls](/img/WEkEO API flow.png){width=100%}
 
 
 ## Dataset queries & troubleshooting
@@ -97,7 +83,7 @@ There are a couple of tricks which can ensure the submitted JSON is as expected 
 
 **Single element lists**  
 Because httr auto-unboxes lists before converting to JSON this can result in a JSON object which WEkEO rejects for single item lists. In the example below unboxing creates a JSON dictionary where WEkEO was exepting an array of dictionaries. As a result the query will fail.
-```{r eval = F}
+```r
 # Fails: argument gets unboxed and WEkEO rejects the query
 query = list(  ...
               
@@ -114,7 +100,7 @@ query = list(  ...
 ```
 
 The trick is to wrap these single item lists in a list. The output is then a dictionary inside an array, which is the format WEkEO was expecting.
-```{r eval = F}
+```r
 # Succeeds: wrapping in an extra list ensures httr submits this as a single element JSON array
 query = list(  ...
               
